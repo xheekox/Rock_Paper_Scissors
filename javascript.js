@@ -22,8 +22,9 @@ function getComputerChoice()
     }
 }
 
-function playRound(playerSelection, computerSelection)
+function playRound(e, computerSelection)
 {
+    playerSelection = e.srcElement.className;
     if(playerSelection.toLowerCase() === "rock")
     {
        if(computerSelection === "Rock")
@@ -72,14 +73,76 @@ function game()
     let playerChoice;
     let computerChoice;
 
-    for(let i = 0; i < 5; i++)
+    // for(let i = 0; i < 5; i++)
+    // {
+    playerChoice = prompt("Pick Rock Paper or scissors!");
+    computerChoice = getComputerChoice();
+    console.log("computer choice is " + computerChoice);
+    console.log(playRound(playerChoice, computerChoice));
+    // }
+}
+
+function playAndPrint(e) 
+{ 
+    
+    const results = document.querySelector(".results");
+    const singleResult = document.createElement("p");
+    const rollingResult = document.createElement("p");
+
+    singleResult.textContent = playRound(e, getComputerChoice());
+    console.log(e);
+    results.appendChild(singleResult);
+    
+    runningTotal++;
+    console.log(singleResult.textContent);
+    if(singleResult.textContent !=  "It's a tie!" && singleResult.textContent.slice(0, 9) != "You lose!")
     {
-        playerChoice = prompt("Pick Rock Paper or scissors!");
-        computerChoice = getComputerChoice();
-        console.log("computer choice is " + computerChoice);
-        console.log(playRound(playerChoice, computerChoice));
+        playerWin++;
+    }
+
+    rollingResult.textContent = ` Player wins: ${playerWin} Computer wins: ${runningTotal-playerWin}`;
+    results.appendChild(rollingResult);
+
+    if(runningTotal === 5)
+    {
+        buttons.forEach( (button) => {
+            button.removeEventListener('click', playAndPrint);
+        })
+
+        printFinalResult();
     }
 }
 
-game();
+// add event listeners to buttons
+const buttons = document.querySelectorAll('button');
+
+let runningTotal = 0;
+let playerWin = 0;
+
+
+    buttons.forEach((button) => {
+    
+        button.addEventListener('click', playAndPrint);
+    });
+
+
+function printFinalResult()
+{
+    const results = document.querySelector(".results");
+    const finalResult = document.createElement("p");
+
+    if (playerWin > 2)
+    {
+
+        finalResult.textContent = "You Won!!!!";
+    } else 
+    {
+        finalResult.textContent = "You LOST!!!!!";
+    }
+
+    results.appendChild(finalResult);
+}
+
+
+// game();
 
